@@ -123,3 +123,61 @@ VirtualBox + Vagrant für Virtualisierung
 Apache als Webserver
 VS Code als Entwicklungsumgebung
 Durch Vagrant konnte die VM schnell, reproduzierbar und effizient bereitgestellt werden.
+
+# M300 – Fragen & Antworten
+
+## Cloud Computing
+
+### **Was versteht man unter Cloud Computing?**
+Cloud Computing bezeichnet die Nutzung von IT-Ressourcen wie Software, Speicherplatz und Rechenleistung über ein Netzwerk (z. B. das Internet), ohne dass diese lokal installiert sein müssen.
+
+---
+
+### **Was versteht man unter Infrastructure as a Service (IaaS)?**
+Infrastructure as a Service (IaaS) stellt grundlegende IT-Infrastruktur wie virtuelle Maschinen, Speicher und Netzwerke zur Verfügung. Der Benutzer ist selbst für das Betriebssystem und die installierte Software verantwortlich.
+
+---
+
+## Infrastructure as Code
+
+### **Was ist der Unterschied zur manuellen Installation einer VM?**
+Infrastructure as Code ermöglicht eine automatisierte, reproduzierbare und dokumentierte Erstellung von virtuellen Maschinen. Im Gegensatz dazu erfolgt eine manuelle Installation meist über eine grafische Benutzeroberfläche.
+
+---
+
+## Vagrant
+
+### **Was wird mit Vagrant erzeugt?**
+Mit Vagrant können virtuelle Maschinen erstellt, konfiguriert und verwaltet werden.
+
+---
+
+### **Welche Aussagen treffen zu?**
+Richtig ist:  
+**b)** Vagrant erzeugt virtuelle Maschinen und unterstützt verschiedene Hypervisoren sowie Cloud-Umgebungen.
+
+---
+
+### **In welchen Bereich des Cloud Computings ist Vagrant einzuordnen?**
+Vagrant ist dem Bereich **Infrastructure as a Service (IaaS)** zuzuordnen.
+
+---
+
+### **Welche Alternativen zu Vagrant gibt es?**
+Mögliche Alternativen sind unter anderem **Terraform**, **Docker**, **Packer** oder direkte Konfigurationen mit **VirtualBox**.
+
+---
+
+### **Wo speichert Vagrant seine Konfiguration?**
+Die Konfiguration von Vagrant wird im **Vagrantfile** gespeichert.
+
+---
+
+### **Was bedeutet die Fehlermeldung  
+„A Vagrant environment or target machine is required to run this command.“?**
+Diese Fehlermeldung tritt auf, wenn ein Vagrant-Befehl in einem Verzeichnis ausgeführt wird, in dem keine **Vagrantfile** vorhanden ist.
+
+---
+
+### **Bei welcher LPI-Zertifizierung ist Vagrant-Wissen hilfreich?**
+Vagrant-Kenntnisse sind besonders hilfreich für die Zertifizierung **LPI DevOps Tools Engineer**.
