@@ -22,7 +22,7 @@ Beim Klonen wurde zuerst der Windows-Benutzername statt des GitHub-Usernames ver
 
 
 
-** 02 Git Client (Git Bash)**
+# **02 Git Client (Git Bash)**
 
 **Ziel**
 
@@ -41,7 +41,7 @@ Leere Ordner wurden auf GitHub nicht angezeigt
 → Lösung: .gitkeep Datei in Ordnern erstellt
 
 
-**03 VirtualBox**
+# **03 VirtualBox**
 
 **Ziel**
 
@@ -55,7 +55,7 @@ VirtualBox wird ausschliesslich als Provider für Vagrant genutzt
 
 
 
-**04 Vagrant**
+# **04 Vagrant**
 
 **Ziel**
 
@@ -80,7 +80,7 @@ vagrant Befehle wurden innerhalb der VM ausgeführt
 
 
 
-**05 Apache Webserver**
+# **05 Apache Webserver**
 
 **Ziel**
 
@@ -101,7 +101,7 @@ Eigene HTML-Seite wird korrekt im Browser angezeigt
 Apache läuft stabil innerhalb der Vagrant-VM
 
 
-**06 Visual Studio Code**
+# **06 Visual Studio Code**
 
 **Ziel**
 
@@ -114,7 +114,7 @@ Repository lokal geöffnet
 Markdown-Dateien bearbeitet
 Änderungen über GitHub gepusht
 
-**07 Fazit**
+# **07 Fazit**
 
 Die Toolumgebung funktioniert vollständig:
 GitHub für Versionierung
