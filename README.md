@@ -1,6 +1,8 @@
+$$
 **M300 Modul Doku**
+$$
 
-**GitHub Account**
+** 01 GitHub Account**
 
 **Ziel**
 
@@ -18,7 +20,9 @@ Public Key (id_rsa.pub) im GitHub-Account hinterlegt
 Beim Klonen wurde zuerst der Windows-Benutzername statt des GitHub-Usernames verwendet
 → Lösung: Repository-URL prüfen (github.com/<username>/<repo>)
 
-**Git Client (Git Bash)**
+
+
+** 02 Git Client (Git Bash)**
 
 **Ziel**
 
@@ -36,7 +40,8 @@ Repository per SSH geklont
 Leere Ordner wurden auf GitHub nicht angezeigt
 → Lösung: .gitkeep Datei in Ordnern erstellt
 
-VirtualBox
+
+**03 VirtualBox**
 
 **Ziel**
 
@@ -50,7 +55,7 @@ VirtualBox wird ausschliesslich als Provider für Vagrant genutzt
 
 
 
-**Vagrant**
+**04 Vagrant**
 
 **Ziel**
 
@@ -73,7 +78,9 @@ und anschliessend vagrant reload
 vagrant Befehle wurden innerhalb der VM ausgeführt
 → Lösung: Vagrant-Befehle nur auf dem Host, Linux-Befehle nur in der VM
 
-**Apache Webserver**
+
+
+**05 Apache Webserver**
 
 **Ziel**
 
@@ -94,7 +101,7 @@ Eigene HTML-Seite wird korrekt im Browser angezeigt
 Apache läuft stabil innerhalb der Vagrant-VM
 
 
-**Visual Studio Code**
+**06 Visual Studio Code**
 
 **Ziel**
 
@@ -107,7 +114,7 @@ Repository lokal geöffnet
 Markdown-Dateien bearbeitet
 Änderungen über GitHub gepusht
 
-**Fazit**
+**07 Fazit**
 
 Die Toolumgebung funktioniert vollständig:
 GitHub für Versionierung
