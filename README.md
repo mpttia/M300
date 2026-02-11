@@ -19,8 +19,8 @@
 7. [Fazit](#07-fazit)  
 8. [Fragen & Antworten](#08-fragen-testumgebung)  
 9. [Container (Docker)](#09-container-docker) 
-10. [Container (Docker)](#10-container-fragen) 
-
+10. [Container (Fragen)](#10-container-fragen) 
+11. [Container (lb3)](#11-container-lb3) 
 ---
 
 # 01 GitHub Account
@@ -617,3 +617,190 @@ Ohne Version wird automatisch `latest` verwendet, wodurch nicht eindeutig defini
 - `export` und `import` beziehen sich auf Container.  
 
 Damit können Images auch ohne Registry übertragen werden.
+
+
+# 11 Docker Container LB3 
+
+## 1. Ziel der Arbeit
+
+Ziel dieser LB3:
+
+- Eine funktionsfähige Docker Umgebung auf dem eigenen Notebook bereitzustellen
+- Ein Backend (Datenbank) und ein Frontend (Webapplikation) miteinander zu kombinieren
+- Einen eigenen Docker Container mittels Dockerfile zu erstellen
+- Einen Healthcheck zu implementieren
+
+---
+
+# 2. Funktionsfähige Docker Umgebung
+
+Zuerst wurde überprüft, ob Docker korrekt installiert ist.
+
+Testbefehl:
+
+```bash
+docker run hello-world
+```
+
+
+```markdown
+![Docker Hello World](images/DockerHelloWorld.png)
+```
+
+---
+
+# 3. Kombination von Backend und Frontend
+
+## 3.1 MySQL Container (Backend)
+
+Der Datenbank-Container wurde mit folgendem Befehl gestartet:
+
+```bash
+docker run -d --name ghost_mysql \
+-e MYSQL_ROOT_PASSWORD=admin \
+-e MYSQL_USER=ghost \
+-e MYSQL_PASSWORD=secret \
+-e MYSQL_DATABASE=ghost \
+mysql:5.7
+```
+
+Überprüfung:
+
+```bash
+docker ps
+```
+
+---
+
+## 3.2 Ghost Container (Frontend)
+
+Anschliessend wurde Ghost gestartet und mit der Datenbank verbunden:
+
+```bash
+docker run -d --name ghost \
+--link ghost_mysql:mysql \
+-e database__client=mysql \
+-e database__connection__host=ghost_mysql \
+-e database__connection__user=ghost \
+-e database__connection__password=secret \
+-e database__connection__database=ghost \
+-p 2368:2368 \
+ghost:1-alpine
+```
+
+Ghost ist nun über folgende Adresse erreichbar:
+
+```
+http://localhost:2368
+```
+
+
+```markdown
+![Ghost läuft](images/DockerGhost.png)
+![Ghost Website](images/localhost2368.png)
+```
+
+---
+
+## 3.3 Nachweis der Verbindung
+
+Wird der MySQL Container gestoppt:
+
+```bash
+docker stop ghost_mysql
+```
+
+funktioniert Ghost nicht mehr korrekt.  
+Dies zeigt, dass Frontend und Backend miteinander verbunden sind.
+
+---
+
+# 4. Eigener Docker Container (Apache)
+
+## 4.1 Dockerfile
+
+Es wurde ein eigener Container mit Apache erstellt.
+
+Dockerfile:
+
+```dockerfile
+FROM ubuntu:22.04
+
+RUN apt-get update && \
+    apt-get -y install apache2 curl
+
+RUN mkdir -p /var/run/apache2
+
+EXPOSE 80
+
+HEALTHCHECK CMD curl --fail http://localhost/ || exit 1
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+```
+
+---
+
+## 4.2 Image erstellen
+
+```bash
+docker build -t lb3-apache .
+```
+
+---
+
+## 4.3 Container starten
+
+```bash
+docker run -d -p 8080:80 --name lb3-apache-container lb3-apache
+```
+
+Aufruf im Browser:
+
+```
+http://localhost:8080
+```
+
+
+```markdown
+![Apache Container läuft](images/apachewebsite2.png)
+```
+
+---
+
+# 5. Healthcheck
+
+Der Container enthält einen HEALTHCHECK Eintrag.
+
+Status prüfen:
+
+```bash
+docker ps
+```
+
+Der Container zeigt den Status:
+
+```
+(healthy)
+```
+
+Oder detailliert:
+
+```bash
+docker inspect --format='{{json .State.Health}}' lb3-apache-container
+```
+
+
+```markdown
+![Healthcheck Status](images/healthceck.png)
+```
+
+---
+
+# 6. Fazit
+
+In dieser LB3 wurde:
+
+- Docker erfolgreich lokal eingerichtet
+- Ein Backend (MySQL) und ein Frontend (Ghost) kombiniert
+- Ein eigener Apache Container erstellt
+- Ein Healthcheck implementiert
