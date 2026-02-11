@@ -3,8 +3,8 @@
 
 **Modul:** M300  
 **Thema:** Toolumgebung, Virtualisierung & Cloud Computing  
-**Autor:** Dein Name  
-**Datum:** TT.MM.JJJJ  
+**Autor:** Mattia Pfister 
+**Datum:** 11.02.2026
 
 ---
 
