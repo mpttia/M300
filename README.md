@@ -18,7 +18,8 @@
 6. [Visual Studio Code](#06-visual-studio-code)  
 7. [Fazit](#07-fazit)  
 8. [Fragen & Antworten](#m300--fragen--antworten)  
-9. [Container (Docker)](#09-container-docker)  
+9. [Container (Docker)](#09-container-docker) 
+10. [Container (Docker)](#10-container-fragen) 
 
 ---
 
@@ -265,7 +266,7 @@ Diese Fehlermeldung tritt auf, wenn ein Vagrant-Befehl in einem Verzeichnis ohne
 ### **Bei welcher LPI-Zertifizierung ist Vagrant-Wissen hilfreich?**
 Vagrant-Kenntnisse sind besonders hilfreich für die Zertifizierung **LPI DevOps Tools Engineer**.
 
-# M300 – 30 Container
+# 10 Container Docker
 
 ## Ziel der Aufgabe
 
@@ -446,3 +447,173 @@ Ich konnte erfolgreich:
 - den Webserver lokal testen
 - typische Fehler erkennen und beheben
 
+## 08 Fragen & Antworten
+
+---
+
+# Container – Grundlagen Fragen
+
+## 1. Worin unterscheidet sich Vagrant von Docker?
+
+**Antwort:**  
+Vagrant wird zur Verwaltung von virtuellen Maschinen (IaaS) eingesetzt.  
+Docker hingegen arbeitet mit Containern (CaaS/PaaS) und virtualisiert nicht das komplette Betriebssystem, sondern nur Prozesse.
+
+---
+
+## 2. Welches Werkzeug aus dem Docker-Umfeld ist funktional mit Vagrant vergleichbar?
+
+**Antwort:**  
+Docker Machine, da es zur Verwaltung von Docker-Hosts dient.
+
+---
+
+## 3. Welche Aufgabe übernimmt der Docker-Provisioner in Vagrant?
+
+**Antwort:**  
+Er installiert und konfiguriert Docker innerhalb einer virtuellen Maschine.
+
+---
+
+## 4. Auf welcher Linux-Kernel-Technologie basieren Container?
+
+**Antwort:**  
+Container verwenden Linux Namespaces sowie Control Groups (cgroups), um Prozesse voneinander zu isolieren.
+
+---
+
+## 5. Welches Architekturprinzip wird häufig beim Einsatz von Containern verwendet?
+
+**Antwort:**  
+Das Microservices-Architekturmuster.
+
+---
+
+## 6. Welche drei zentralen Prinzipien kennzeichnen Microservices (abgeleitet vom UNIX-Prinzip)?
+
+**Antwort:**  
+- Ein Dienst soll genau eine Aufgabe übernehmen und diese gut erfüllen.  
+- Dienste sollen miteinander kommunizieren können.  
+- Es wird eine standardisierte Schnittstelle genutzt (z. B. REST über HTTP).
+
+---
+
+# 10 Container Fragen
+
+## 7. Was unterscheidet ein Docker Image von einem Container?
+
+**Antwort:**  
+Ein Docker Image ist eine unveränderbare Vorlage (read-only).  
+Ein Container ist eine laufende Instanz eines Images mit zusätzlicher Schreibschicht für Änderungen.
+
+---
+
+## 8. Was ist der Unterschied zwischen einer virtuellen Maschine und einem Docker Container?
+
+**Antwort:**  
+Eine virtuelle Maschine enthält ein vollständiges Betriebssystem.  
+Ein Docker Container nutzt den Kernel des Host-Systems und führt nur die benötigten Prozesse aus.
+
+---
+
+## 9. Wie erhält man Informationen über einen laufenden Container?
+
+**Antwort:**  
+Mit folgenden Befehlen:
+
+```bash
+docker logs container-name
+docker inspect container-name
+```
+
+---
+
+## 10. Worin liegt der Unterschied zwischen einer Docker Registry und einem Repository?
+
+**Antwort:**  
+Eine Registry ist ein zentraler Speicherort für Docker Images.  
+Ein Repository enthält verschiedene Versionen (Tags) eines bestimmten Images.
+
+---
+
+## 11. Wie wird ein Docker Image erstellt?
+
+**Antwort:**  
+
+```bash
+docker build -t image-name .
+```
+
+---
+
+## 12. In welcher Datei wird definiert, wie ein Container Image aufgebaut ist?
+
+**Antwort:**  
+Im Dockerfile.
+
+---
+
+## 13. Welche Prozessnummer erhält der erste Prozess innerhalb eines Containers?
+
+**Antwort:**  
+Die Prozessnummer 1 (PID 1).
+
+---
+
+## 14. Welche Docker-Komponenten sind durch Kubernetes weitgehend ersetzt worden?
+
+**Antwort:**  
+Docker Swarm (Orchestrierung).  
+Docker Compose wird in produktiven Kubernetes-Umgebungen ebenfalls nicht mehr verwendet.
+
+---
+
+## 15. Welche Aussage entspricht modernen DevOps-Prinzipien?
+
+a) Build- und Laufprozess sollen gemeinsam im Dockerfile definiert werden.  
+b) Build- und Laufprozess sollen strikt getrennt werden.
+
+**Antwort:**  
+b) Build und Run sollten getrennt sein, um saubere CI/CD-Prozesse zu gewährleisten.
+
+---
+
+# Docker Hub
+
+## 16. Was ist Docker Hub?
+
+**Antwort:**  
+Docker Hub ist eine öffentliche Container Registry, die von der Firma Docker betrieben wird.
+
+---
+
+## 17. Welche Alternativen zu Docker Hub existieren?
+
+**Antwort:**  
+- Container Registries von Cloud-Anbietern (z. B. AWS, Azure, Google Cloud)  
+- Private Registries  
+- Artefakt-Repositories wie Sonatype Nexus
+
+---
+
+## 18. Warum sollte ein Unternehmen eine eigene Docker Registry betreiben?
+
+**Antwort:**  
+Zur Erhöhung der Sicherheit und Kontrolle über verwendete Container Images.
+
+---
+
+## 19. Warum sollten Images immer mit einer konkreten Version (Tag) verwendet werden?
+
+**Antwort:**  
+Ohne Version wird automatisch `latest` verwendet, wodurch nicht eindeutig definiert ist, welche Version eingesetzt wird.
+
+---
+
+## 20. Was ist der Unterschied zwischen `docker save`/`docker load` und `docker export`/`docker import`?
+
+**Antwort:**  
+- `save` und `load` beziehen sich auf Docker Images.  
+- `export` und `import` beziehen sich auf Container.  
+
+Damit können Images auch ohne Registry übertragen werden.
