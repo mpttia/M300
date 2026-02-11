@@ -1,128 +1,206 @@
-$$
-**M300 Modul Doku**
-$$
+# M300 – Modul Dokumentation  
+## Toolumgebung & Cloud Grundlagen
 
-# **01 GitHub Account**
+**Modul:** M300  
+**Thema:** Toolumgebung, Virtualisierung & Cloud Computing  
+**Autor:** Dein Name  
+**Datum:** TT.MM.JJJJ  
 
-**Ziel**
+---
 
+# Inhaltsverzeichnis
+
+1. [GitHub Account](#01-github-account)  
+2. [Git Client (Git Bash)](#02-git-client-git-bash)  
+3. [VirtualBox](#03-virtualbox)  
+4. [Vagrant](#04-vagrant)  
+5. [Apache Webserver](#05-apache-webserver)  
+6. [Visual Studio Code](#06-visual-studio-code)  
+7. [Fazit](#07-fazit)  
+8. [Fragen & Antworten](#m300--fragen--antworten)  
+
+---
+
+# 01 GitHub Account
+
+## **Ziel**
 GitHub wird als zentrales Repository für Code und Dokumentation verwendet.
 
-**Vorgehen**
+## **Vorgehen**
+- GitHub-Account erstellt  
+- Repository **M300** erstellt (public, mit README)  
+- SSH-Key lokal erstellt  
+  ```bash
+  ssh-keygen
+  ```
+- Public Key (`id_rsa.pub`) im GitHub-Account hinterlegt  
 
-GitHub-Account erstellt
-Repository M300 erstellt (public, mit README)
-SSH-Key lokal erstellt (ssh-keygen)
-Public Key (id_rsa.pub) im GitHub-Account hinterlegt
+## **Aufgetretene Probleme**
+Beim Klonen wurde zuerst der Windows-Benutzername statt des GitHub-Usernames verwendet.  
+→ **Lösung:** Repository-URL prüfen  
+```
+github.com/<username>/<repo>
+```
 
-**Aufgetretene Probleme**
+---
 
-Beim Klonen wurde zuerst der Windows-Benutzername statt des GitHub-Usernames verwendet
-→ Lösung: Repository-URL prüfen (github.com/<username>/<repo>)
+# 02 Git Client (Git Bash)
 
-
-
-# **02 Git Client (Git Bash)**
-
-**Ziel**
-
+## **Ziel**
 Git Bash wird genutzt, um Git- und SSH-Befehle unter Windows auszuführen.
 
-**Vorgehen**
+## **Vorgehen**
+- Git Bash installiert  
+- Git global konfiguriert  
+  ```bash
+  git config --global user.name "Dein Name"
+  git config --global user.email "deine@email.ch"
+  ```
+- Repository per SSH geklont  
+  ```bash
+  git clone git@github.com:<username>/<repo>.git
+  ```
+- Änderungen hochgeladen  
+  ```bash
+  git add .
+  git commit -m "Kommentar"
+  git push
+  ```
 
-Git Bash installiert
-Git global konfiguriert (user.name, user.email)
-Repository per SSH geklont
-Änderungen mit git add, git commit, git push hochgeladen
+## **Aufgetretene Probleme**
+Leere Ordner wurden auf GitHub nicht angezeigt.  
+→ **Lösung:** `.gitkeep` Datei im Ordner erstellt.
 
-**Aufgetretene Probleme**
+---
 
-Leere Ordner wurden auf GitHub nicht angezeigt
-→ Lösung: .gitkeep Datei in Ordnern erstellt
+# 03 VirtualBox
 
-
-# **03 VirtualBox**
-
-**Ziel**
-
+## **Ziel**
 VirtualBox dient als Virtualisierungsplattform für Vagrant.
 
-**Vorgehen**
+## **Vorgehen**
+- VirtualBox installiert  
+- Keine manuelle VM-Erstellung durchgeführt  
+- Nutzung ausschliesslich als Provider für Vagrant  
 
-VirtualBox installiert
-Keine manuelle VM-Erstellung durchgeführt
-VirtualBox wird ausschliesslich als Provider für Vagrant genutzt
+---
 
+# 04 Vagrant
 
-
-# **04 Vagrant**
-
-**Ziel**
-
+## **Ziel**
 Vagrant ermöglicht das schnelle und reproduzierbare Erstellen einer Ubuntu-VM.
 
-**Vorgehen**
+## **Vorgehen**
+- Vagrant installiert  
+- Projekt initialisiert  
+  ```bash
+  vagrant init ubuntu/xenial64
+  vagrant up
+  ```
+- Verbindung zur VM  
+  ```bash
+  vagrant ssh
+  ```
+- Apache innerhalb der VM installiert  
+- Portweiterleitung im `Vagrantfile` konfiguriert  
 
-Vagrant installiert
-VM mit ubuntu/xenial64 erstellt
-Apache innerhalb der VM installiert
-Portweiterleitung im Vagrantfile konfiguriert (Port 80 → 8080)
+```ruby
+config.vm.network "forwarded_port", guest: 80, host: 8080
+```
 
-**Aufgetretene Probleme**
+- VM neu geladen  
+  ```bash
+  vagrant reload
+  ```
 
-Port 80 war nicht erreichbar im Browser
-→ Ursache: Port-Forwarding fehlte bzw. VM wurde nicht neu geladen
-→ Lösung: config.vm.network "forwarded_port", guest: 80, host: 8080
-und anschliessend vagrant reload
+## **Wichtige Vagrant-Befehle**
+```bash
+vagrant up
+vagrant halt
+vagrant reload
+vagrant destroy
+vagrant status
+vagrant ssh
+```
 
-vagrant Befehle wurden innerhalb der VM ausgeführt
-→ Lösung: Vagrant-Befehle nur auf dem Host, Linux-Befehle nur in der VM
+## **Aufgetretene Probleme**
 
+**Problem 1:** Port 80 nicht erreichbar  
+→ Ursache: Port-Forwarding fehlte oder VM nicht neu geladen  
+→ Lösung: Port-Weiterleitung ergänzen + `vagrant reload`
 
+**Problem 2:** Vagrant-Befehle innerhalb der VM ausgeführt  
+→ Lösung:  
+- Vagrant-Befehle nur im Host-Terminal  
+- Linux-Befehle nur innerhalb der VM (`vagrant ssh`)
 
-# **05 Apache Webserver**
+---
 
-**Ziel**
+# 05 Apache Webserver
 
+## **Ziel**
 Bereitstellung eines Webservers innerhalb der Vagrant-VM.
 
-**Vorgehen**
+## **Vorgehen**
 
-Apache mit apt install apache2 installiert
-Apache-Status geprüft (systemctl status apache2)
-Erreichbarkeit intern mit curl http://localhost getestet
-Zugriff extern über http://localhost:8080
-index.html unter /var/www/html/ bearbeitet
+Apache installiert:
+```bash
+sudo apt update
+sudo apt install apache2
+```
 
-**Ergebnis**
+Status geprüft:
+```bash
+systemctl status apache2
+```
 
-Eigene HTML-Seite wird korrekt im Browser angezeigt
+Intern getestet:
+```bash
+curl http://localhost
+```
 
-Apache läuft stabil innerhalb der Vagrant-VM
+Extern erreichbar über:
+```
+http://localhost:8080
+```
 
+HTML-Datei bearbeitet:
+```
+/var/www/html/index.html
+```
 
-# **06 Visual Studio Code**
+## **Ergebnis**
+- Eigene HTML-Seite wird korrekt angezeigt  
+- Apache läuft stabil innerhalb der Vagrant-VM  
 
-**Ziel**
+---
 
+# 06 Visual Studio Code
+
+## **Ziel**
 VS Code wird als Editor für Code und Dokumentation verwendet.
 
-**Vorgehen**
+## **Vorgehen**
+- Visual Studio Code installiert  
+- Repository lokal geöffnet  
+- Markdown-Dateien bearbeitet  
+- Änderungen mit Git gepusht  
 
-Visual Studio Code installiert
-Repository lokal geöffnet
-Markdown-Dateien bearbeitet
-Änderungen über GitHub gepusht
+---
 
-# **07 Fazit**
+# 07 Fazit
 
-Die Toolumgebung funktioniert vollständig:
-GitHub für Versionierung
-Git Bash für Git/SSH
-VirtualBox + Vagrant für Virtualisierung
-Apache als Webserver
-VS Code als Entwicklungsumgebung
+Die gesamte Toolumgebung funktioniert vollständig:
+
+- GitHub → Versionierung  
+- Git Bash → Git & SSH  
+- VirtualBox + Vagrant → Virtualisierung  
+- Apache → Webserver  
+- VS Code → Entwicklungsumgebung  
+
 Durch Vagrant konnte die VM schnell, reproduzierbar und effizient bereitgestellt werden.
+
+---
 
 # M300 – Fragen & Antworten
 
@@ -141,19 +219,18 @@ Infrastructure as a Service (IaaS) stellt grundlegende IT-Infrastruktur wie virt
 ## Infrastructure as Code
 
 ### **Was ist der Unterschied zur manuellen Installation einer VM?**
-Infrastructure as Code ermöglicht eine automatisierte, reproduzierbare und dokumentierte Erstellung von virtuellen Maschinen. Im Gegensatz dazu erfolgt eine manuelle Installation meist über eine grafische Benutzeroberfläche.
+Infrastructure as Code ermöglicht eine automatisierte, reproduzierbare und dokumentierte Erstellung von virtuellen Maschinen. Im Gegensatz dazu erfolgt die manuelle Installation meist über eine grafische Benutzeroberfläche.
 
 ---
 
 ## Vagrant
 
 ### **Was wird mit Vagrant erzeugt?**
-Mit Vagrant können virtuelle Maschinen erstellt, konfiguriert und verwaltet werden.
+Mit Vagrant werden virtuelle Maschinen erstellt, konfiguriert und verwaltet.
 
 ---
 
 ### **Welche Aussagen treffen zu?**
-Richtig ist:  
 **b)** Vagrant erzeugt virtuelle Maschinen und unterstützt verschiedene Hypervisoren sowie Cloud-Umgebungen.
 
 ---
@@ -164,18 +241,21 @@ Vagrant ist dem Bereich **Infrastructure as a Service (IaaS)** zuzuordnen.
 ---
 
 ### **Welche Alternativen zu Vagrant gibt es?**
-Mögliche Alternativen sind unter anderem **Terraform**, **Docker**, **Packer** oder direkte Konfigurationen mit **VirtualBox**.
+- Terraform  
+- Docker  
+- Packer  
+- Direkte Konfiguration mit VirtualBox  
 
 ---
 
 ### **Wo speichert Vagrant seine Konfiguration?**
-Die Konfiguration von Vagrant wird im **Vagrantfile** gespeichert.
+Die Konfiguration wird im **Vagrantfile** gespeichert.
 
 ---
 
 ### **Was bedeutet die Fehlermeldung  
 „A Vagrant environment or target machine is required to run this command.“?**
-Diese Fehlermeldung tritt auf, wenn ein Vagrant-Befehl in einem Verzeichnis ausgeführt wird, in dem keine **Vagrantfile** vorhanden ist.
+Diese Fehlermeldung tritt auf, wenn ein Vagrant-Befehl in einem Verzeichnis ohne `Vagrantfile` ausgeführt wird.
 
 ---
 
