@@ -261,3 +261,182 @@ Diese Fehlermeldung tritt auf, wenn ein Vagrant-Befehl in einem Verzeichnis ohne
 
 ### **Bei welcher LPI-Zertifizierung ist Vagrant-Wissen hilfreich?**
 Vagrant-Kenntnisse sind besonders hilfreich für die Zertifizierung **LPI DevOps Tools Engineer**.
+
+# M300 – 30 Container
+
+## Ziel der Aufgabe
+
+In dieser Aufgabe habe ich einen Webserver mithilfe von Docker containerisiert.  
+Ich habe ein Docker-Image erstellt, einen Container gestartet und überprüft, ob der Webserver lokal erreichbar ist.
+
+---
+
+## Voraussetzungen
+
+- Docker installiert
+- VS Code
+- Terminal / PowerShell
+
+Ich habe zuerst überprüft, ob Docker korrekt installiert ist:
+
+```bash
+docker --version
+```
+
+Zusätzlich habe ich kontrolliert, ob Docker läuft:
+
+```bash
+docker ps
+```
+
+---
+
+## Projektstruktur
+
+Mein Projektordner sieht wie folgt aus:
+
+```
+30-Container/
+│── Dockerfile
+│── index.html
+│── README.md
+```
+
+---
+
+## Dockerfile
+
+Ich habe folgendes Dockerfile verwendet:
+
+```dockerfile
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+Erklärung:
+- `FROM nginx:latest` verwendet das offizielle Nginx-Image
+- `COPY` ersetzt die Standard-Webseite durch meine eigene Datei
+
+---
+
+## Docker Image erstellen
+
+Im Projektordner habe ich das Image gebaut:
+
+```bash
+docker build -t m300-webserver .
+```
+
+Dabei wurde das Image erfolgreich erstellt.
+
+Ich habe das Image kontrolliert mit:
+
+```bash
+docker images
+```
+
+---
+
+## Container starten
+
+Den Container habe ich mit folgendem Befehl gestartet:
+
+```bash
+docker run -d -p 8080:80 --name m300-container m300-webserver
+```
+
+Anschliessend habe ich überprüft, ob der Container läuft:
+
+```bash
+docker ps
+```
+
+---
+
+## Webserver testen
+
+Ich habe im Browser folgende Adresse geöffnet:
+
+```
+http://localhost:8080
+```
+
+Die Webseite wurde korrekt angezeigt.
+
+---
+
+## Typische Fehler und meine Lösungen
+
+### Fehler 1: Port bereits belegt
+
+Fehlermeldung:
+```
+port is already allocated
+```
+
+Ursache:
+Der Port 8080 war bereits durch einen anderen Container belegt.
+
+Lösung:
+Ich habe zuerst überprüft, welche Container laufen:
+
+```bash
+docker ps
+```
+
+Anschliessend habe ich den alten Container gestoppt:
+
+```bash
+docker stop container-name
+```
+
+Oder gelöscht:
+
+```bash
+docker rm container-name
+```
+
+Danach konnte ich den neuen Container starten.
+
+---
+
+### Fehler 2: Container startet nicht
+
+Ich habe mit folgendem Befehl die Logs überprüft:
+
+```bash
+docker logs m300-container
+```
+
+So konnte ich erkennen, ob ein Fehler im Container vorliegt.
+
+---
+
+### Fehler 3: Änderungen werden nicht angezeigt
+
+Nachdem ich `index.html` geändert hatte, wurde die Seite nicht aktualisiert.
+
+Ursache:
+Das Image muss nach Änderungen neu gebaut werden.
+
+Lösung:
+
+```bash
+docker build -t m300-webserver .
+docker stop m300-container
+docker rm m300-container
+docker run -d -p 8080:80 --name m300-container m300-webserver
+```
+
+---
+
+## Fazit
+
+Ich konnte erfolgreich:
+- ein Dockerfile erstellen
+- ein Docker-Image bauen
+- einen Container starten
+- den Webserver lokal testen
+- typische Fehler erkennen und beheben
+
+Damit habe ich die Containerisierung eines einfachen Webservers erfolgreich umgesetzt.
