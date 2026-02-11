@@ -439,4 +439,3 @@ Ich konnte erfolgreich:
 - den Webserver lokal testen
 - typische Fehler erkennen und beheben
 
-Damit habe ich die Containerisierung eines einfachen Webservers erfolgreich umgesetzt.
