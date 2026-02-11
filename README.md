@@ -299,10 +299,9 @@ docker ps
 Mein Projektordner sieht wie folgt aus:
 
 ```
-30-Container/
+Dockerweb/
 │── Dockerfile
 │── index.html
-│── README.md
 ```
 
 ---
@@ -327,8 +326,9 @@ Erklärung:
 Im Projektordner habe ich das Image gebaut:
 
 ```bash
-docker build -t m300-webserver .
+docker build -t m300-nginx .
 ```
+![Build](images/DockerBuild.png)
 
 Dabei wurde das Image erfolgreich erstellt.
 
@@ -345,7 +345,7 @@ docker images
 Den Container habe ich mit folgendem Befehl gestartet:
 
 ```bash
-docker run -d -p 8080:80 --name m300-container m300-webserver
+docker run -d -p 8080:80 --name m300-nginx-container m300-nginx
 ```
 
 Anschliessend habe ich überprüft, ob der Container läuft:
@@ -353,6 +353,7 @@ Anschliessend habe ich überprüft, ob der Container läuft:
 ```bash
 docker ps
 ```
+![Dockerstart](images/DockerStartPS.png)
 
 ---
 
@@ -365,6 +366,9 @@ http://localhost:8080
 ```
 
 Die Webseite wurde korrekt angezeigt.
+
+![Web](images/webserver.png)
+
 
 ---
 
