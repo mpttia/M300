@@ -643,9 +643,9 @@ docker run hello-world
 ```
 
 
-```markdown
+
 ![Docker Hello World](images/DockerHelloWorld.png)
-```
+
 
 ---
 
@@ -695,10 +695,11 @@ http://localhost:2368
 ```
 
 
-```markdown
+
 ![Ghost läuft](images/DockerGhost.png)
+
 ![Ghost Website](images/localhost2368.png)
-```
+
 
 ---
 
@@ -761,9 +762,9 @@ http://localhost:8080
 ```
 
 
-```markdown
+
 ![Apache Container läuft](images/apachewebsite2.png)
-```
+
 
 ---
 
@@ -790,9 +791,9 @@ docker inspect --format='{{json .State.Health}}' lb3-apache-container
 ```
 
 
-```markdown
+
 ![Healthcheck Status](images/healthceck.png)
-```
+
 
 ---
 
