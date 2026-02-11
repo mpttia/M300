@@ -173,6 +173,8 @@ HTML-Datei bearbeitet:
 ## **Ergebnis**
 - Eigene HTML-Seite wird korrekt angezeigt  
 - Apache läuft stabil innerhalb der Vagrant-VM  
+- ![Apache Testseite](apache.png)
+
 
 ---
 
