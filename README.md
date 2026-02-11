@@ -3,8 +3,8 @@
 
 **Modul:** M300  
 **Thema:** Toolumgebung, Virtualisierung & Cloud Computing  
-**Autor:** Dein Name  
-**Datum:** TT.MM.JJJJ  
+**Autor:** Mattia Pfister 
+**Datum:** 11.02.2026
 
 ---
 
@@ -440,4 +440,3 @@ Ich konnte erfolgreich:
 - den Webserver lokal testen
 - typische Fehler erkennen und beheben
 
-Damit habe ich die Containerisierung eines einfachen Webservers erfolgreich umgesetzt.
