@@ -906,11 +906,10 @@ Das Projekt verwendet ein eigenes Docker Bridge Netzwerk (`mc-network`).
 
 ---
 
-## Screenshot – Netzwerk
 
-```markdown
+
 ![Docker Netzwerk](images/portainernetwork.png)
-```
+
 
 ---
 
@@ -933,11 +932,9 @@ Auch nach Neustarts bleibt die Welt bestehen.
 
 ---
 
-## Screenshot – Volume
 
-```markdown
 ![Docker Volume](images/portainervolume.png)
-```
+
 
 ---
 
@@ -956,11 +953,10 @@ Damit wurde die Netzwerkfunktionalität erfolgreich verifiziert.
 
 ---
 
-## Screenshot – Server läuft im Spiel
 
-```markdown
+
 ![Minecraft Multiplayer](images/minecraft-multiplayer.png)
-```
+
 
 ---
 
@@ -976,11 +972,9 @@ docker ps
 
 ---
 
-## Screenshot – docker ps
 
-```markdown
 ![Docker Container läuft](images/dockermitdashboard.png)
-```
+
 
 ---
 
@@ -998,27 +992,16 @@ Portainer ermöglicht:
 
 ---
 
-## Screenshot – Portainer Startseite
-
-```markdown
 ![Portainer Start](images/portainerstartseite.png)
-```
 
 ---
 
-## Screenshot – Container Details
 
-```markdown
 ![Container Details](images/portainerview.png)
-```
 
 ---
 
-## Screenshot – Container Statistik
-
-```markdown
 ![Container Stats](images/portainerstats.png)
-```
 
 ---
 
