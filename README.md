@@ -21,6 +21,8 @@
 9. [Container (Docker)](#09-container-docker) 
 10. [Container (Fragen)](#10-container-fragen) 
 11. [Container (lb3)](#11-docker-container-lb3) 
+12. [Projekt 50 Minecraft Server](#projekt-50-containerisierter-minecraft-server-mit-doceker) 
+
 ---
 
 # 01 GitHub Account
@@ -806,7 +808,7 @@ In dieser LB3 wurde:
 - Ein eigener Apache Container erstellt
 - Ein Healthcheck implementiert
 
-# Projekt 50 – Containerisierter Minecraft Server mit Docker
+# Projekt 50 Containerisierter Minecraft Server mit Docker
 
 ---
 
