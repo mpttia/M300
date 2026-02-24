@@ -578,7 +578,7 @@ b) Build und Run sollten getrennt sein, um saubere CI/CD-Prozesse zu gewährleis
 
 ---
 
-# Docker Hub
+## Docker Hub
 
 ## 16. Was ist Docker Hub?
 
@@ -805,3 +805,308 @@ In dieser LB3 wurde:
 - Ein Backend (MySQL) und ein Frontend (Ghost) kombiniert
 - Ein eigener Apache Container erstellt
 - Ein Healthcheck implementiert
+
+# Projekt 50 – Containerisierter Minecraft Server mit Docker
+
+---
+
+# 1. Zweck des gewählten Service
+
+In diesem Projekt wurde ein Minecraft Multiplayer-Server mithilfe von Docker betrieben.  
+Der Server ermöglicht mehreren Spielern das gemeinsame Spielen auf einer persistenten Welt.  
+Ziel war es, den Dienst containerisiert, reproduzierbar und überwacht bereitzustellen.
+
+---
+
+# 2. Aufbau und logische Struktur des Projektes
+
+Der Aufbau des Projektes ist wie folgt:
+
+Hostsystem (Windows + Docker Desktop)  
+→ Docker Engine  
+→ docker-compose  
+→ Minecraft Server Container  
+→ Docker Volume (Persistenz)  
+→ Portainer (Monitoring)
+
+Der Minecraft Server läuft isoliert in einem Container.  
+Die Spielwelt wird in einem Docker Volume gespeichert.  
+Das Netzwerk wird über ein eigenes Bridge-Netzwerk verwaltet.
+
+---
+
+# 3. Konfiguration des Dienstes (Minecraft Server)
+
+Der Server wurde mit folgendem Docker Image umgesetzt:
+
+```
+itzg/minecraft-server
+```
+
+## Verwendete docker-compose.yml
+
+```yaml
+version: "3.8"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "2G"
+    volumes:
+      - minecraft-data:/data
+    restart: unless-stopped
+    mem_limit: 3g
+    networks:
+      - mc-network
+
+volumes:
+  minecraft-data:
+
+networks:
+  mc-network:
+    driver: bridge
+```
+
+Wichtige Konfigurationspunkte:
+
+- EULA wurde akzeptiert
+- PAPER Server für bessere Performance
+- 2GB Java Memory
+- 3GB Container Limit
+- Automatischer Neustart aktiviert
+
+---
+
+# 4. Netzwerk Konfiguration
+
+Der Minecraft Server benötigt:
+
+- TCP Port 25565
+
+Port Mapping:
+
+Host 25565 → Container 25565
+
+Dadurch ist der Server erreichbar über:
+
+- localhost
+- IPv4-Adresse im WLAN
+- VPN-Adresse (falls erlaubt)
+
+Das Projekt verwendet ein eigenes Docker Bridge Netzwerk (`mc-network`).
+
+---
+
+## Screenshot – Netzwerk
+
+```markdown
+![Docker Netzwerk](images/portainernetwork.png)
+```
+
+---
+
+# 5. Host ↔ Container Interaktion (Persistenz)
+
+Die Minecraft Welt wird in einem Docker Volume gespeichert:
+
+```
+minecraft-data:/data
+```
+
+Dadurch bleiben folgende Daten erhalten:
+
+- world/
+- logs/
+- server.properties
+- ops.json
+
+Auch nach Neustarts bleibt die Welt bestehen.
+
+---
+
+## Screenshot – Volume
+
+```markdown
+![Docker Volume](images/portainervolume.png)
+```
+
+---
+
+# 6. Multiplayer Funktionstest
+
+Der Server wurde erfolgreich gestartet und getestet.  
+Mehrere Spieler konnten gleichzeitig beitreten. (Aber nur wenn ich einen Hotspot benutzt habe, da das BBZ-WLAN das gesperrt hat)
+
+Der Zugriff erfolgte über:
+
+```
+IPv4-Adresse-des-Hosts:25565
+```
+
+Damit wurde die Netzwerkfunktionalität erfolgreich verifiziert.
+
+---
+
+## Screenshot – Server läuft im Spiel
+
+```markdown
+![Minecraft Multiplayer](images/minecraft-multiplayer.png)
+```
+
+---
+
+# 7. Container Status und Laufzeit
+
+Der Container läuft stabil und wird als „healthy“ angezeigt.
+
+Statusprüfung:
+
+```bash
+docker ps
+```
+
+---
+
+## Screenshot – docker ps
+
+```markdown
+![Docker Container läuft](images/dockermitdashboard.png)
+```
+
+---
+
+# 8. Monitoring Lösung
+
+Zur Überwachung wurde Portainer eingesetzt.
+
+Portainer ermöglicht:
+
+- Übersicht über Container
+- Netzwerkansicht
+- Volume-Verwaltung
+- Live CPU/RAM Monitoring
+- Logs
+
+---
+
+## Screenshot – Portainer Startseite
+
+```markdown
+![Portainer Start](images/portainerstartseite.png)
+```
+
+---
+
+## Screenshot – Container Details
+
+```markdown
+![Container Details](images/portainerview.png)
+```
+
+---
+
+## Screenshot – Container Statistik
+
+```markdown
+![Container Stats](images/portainerstats.png)
+```
+
+---
+
+# 9. Fehleranalyse und Problemlösung
+
+## Fehler 1 – docker build ohne Kontext
+
+Fehlermeldung:
+
+```
+requires 1 argument
+```
+
+Ursache:  
+Der Punkt (.) beim Build-Befehl fehlte.
+
+Lösung:
+
+```bash
+docker build -t image-name .
+```
+
+---
+
+## Fehler 2 – Git Bash Steuerzeichen
+
+Fehlermeldung:
+
+```
+command not found
+```
+
+Ursache:  
+Copy-Paste erzeugte Steuerzeichen (^[[200~).
+
+Lösung:  
+Befehl manuell neu eingeben.
+
+---
+
+## Fehler 3 – Port blockiert
+
+Fehlermeldung:
+
+```
+permission denied: getsockopt
+```
+
+Ursache:  
+Firewall oder VPN blockierte Port 25565.
+
+Lösung:
+
+- Firewall Regel für TCP 25565 erstellen
+- LAN Zugriff im VPN aktivieren
+- VPN testweise deaktivieren
+
+---
+
+## Fehler 4 – Portainer Timeout
+
+Fehlermeldung:
+
+```
+Unable to retrieve server settings
+```
+
+Lösung:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+Browser neu starten.
+
+---
+
+# 10. Fazit
+
+Der Minecraft Server wurde erfolgreich containerisiert und im lokalen Netzwerk bereitgestellt.
+
+Umgesetzt wurden:
+
+- Strukturierte Multi-Service Architektur
+- Eigenes Docker Netzwerk
+- Persistente Speicherung über Volume
+- Ressourcenbegrenzung
+- Monitoring mit Portainer
+- Multiplayer-Test erfolgreich durchgeführt
+- Fehleranalyse dokumentiert
+
+Das System ist stabil, reproduzierbar und erweiterbar.
