@@ -955,7 +955,7 @@ Damit wurde die Netzwerkfunktionalität erfolgreich verifiziert.
 
 
 
-![Minecraft Multiplayer](images/minecraft-multiplayer.png)
+![Minecraft Multiplayer](images/multiplayer.png)
 
 
 ---
