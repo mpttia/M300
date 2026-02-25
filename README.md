@@ -1157,3 +1157,277 @@ Umgesetzt wurden:
 - Dokumentierte Fehleranalyse
 
 Das System läuft stabil, reproduzierbar und ist modular erweiterbar.
+
+# 12 Container-Sicherheit
+
+---
+
+# 1. Protokollieren (Logging)
+
+## 1.1 Standard Logging testen
+
+Docker speichert standardmässig alles, was ein Container an `STDOUT` oder `STDERR` ausgibt.
+
+Test:
+
+```bash
+docker run --name logtest ubuntu bash -c 'echo "stdout"; echo "stderr" >&2'
+docker logs logtest
+docker rm logtest
+```
+
+Ergebnis:
+- Beide Ausgaben wurden gespeichert
+- `docker logs` zeigt die Inhalte korrekt an
+
+---
+
+## 1.2 Laufende Logs anzeigen
+
+```bash
+docker run -d --name streamtest ubuntu bash -c 'while true; do echo "tick"; sleep 1; done;'
+docker logs streamtest
+docker rm -f streamtest
+```
+
+Damit wurde gezeigt:
+- Logs werden kontinuierlich gespeichert
+- Auch laufende Container können überwacht werden
+
+---
+
+![DockerLogs](images/dockerlogs.png)
+
+---
+
+# 2. Monitoring mit cAdvisor
+
+Zur Überwachung wurde **cAdvisor** eingesetzt.
+
+Start des Containers:
+
+```powershell
+docker run -d --name cadvisor -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -p 8080:8080 google/cadvisor:latest
+```
+
+Aufruf im Browser:
+
+```
+http://localhost:8080
+```
+
+cAdvisor zeigt:
+- CPU Nutzung
+- RAM Nutzung
+- Netzwerk Traffic
+- Container Übersicht
+
+---
+
+![Localhost808](images/localhost3.png)
+
+---
+
+## Fehler 1 – Git Bash Pfadproblem
+
+Beim ersten Versuch wurde der Befehl in Git Bash ausgeführt.
+
+Fehler:
+```
+Access is denied
+```
+
+Ursache:
+Git Bash konvertiert Linux-Pfade automatisch in Windows-Pfade.
+
+Lösung:
+Befehl in PowerShell ausführen. (Mit admin rechten)
+
+---
+
+# 3. Container absichern & beschränken
+
+## 3.1 Speicher begrenzen
+
+Test mit Stress-Container:
+
+```powershell
+docker run --rm -m 128m --memory-swap 128m polinux/stress --vm 1 --vm-bytes 127m -t 5s
+```
+
+Erklärung:
+- `-m 128m` → Container darf max. 128 MB RAM nutzen
+- `--memory-swap 128m` → kein zusätzlicher Swap
+
+Ergebnis:
+Container wird korrekt begrenzt und beendet sich sauber.
+
+---
+
+![DockerStress1](images/dockerstatsstress.png)
+
+---
+
+## Fehler 2 – Veraltetes Stress-Image
+
+Ursprünglich wurde folgendes Image verwendet:
+
+```
+amouat/stress
+```
+
+Fehlermeldung:
+```
+Pulling Schema 1 images have been deprecated
+```
+
+Ursache:
+Image war veraltet (Schema v1).
+
+Lösung:
+Wechsel auf modernes Image `polinux/stress`.
+
+---
+
+## 3.2 CPU beschränken
+
+```powershell
+docker run -d --name cpu1 --cpus="1.0" polinux/stress --cpu 2
+docker run -d --name cpu2 --cpus="0.5" polinux/stress --cpu 2
+docker stats
+```
+
+Ergebnis:
+Container mit höherem CPU-Limit erhält mehr Rechenzeit.
+
+Aufräumen:
+
+```powershell
+docker rm -f cpu1 cpu2
+```
+
+---
+
+## 3.3 Read-Only Dateisystem
+
+```powershell
+docker run --read-only ubuntu touch test
+```
+
+Ergebnis:
+Fehlermeldung → Schreiben nicht möglich.
+
+Damit wurde gezeigt:
+- Schreibzugriffe können blockiert werden
+- Schutz vor Manipulationen möglich
+
+---
+
+# 4. Kontinuierliche Integration (CI) mit Jenkins Blue Ocean
+
+## 4.1 Start Jenkins Blue Ocean
+
+Start des Containers:
+
+```powershell
+docker run -d --name jenkins -u root -p 8082:8080 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v ${env:USERPROFILE}:/home jenkinsci/blueocean
+```
+
+Aufruf im Browser:
+
+```
+http://localhost:8082
+```
+---
+## Jenkins
+
+![ImageLocalhostJenkins](images/jenksiensperren.png)
+
+---
+
+## Fehler 3 – Falscher Zeilenumbruch in PowerShell
+
+Ursprünglich wurde `\` als Zeilenumbruch verwendet.
+
+PowerShell benötigt jedoch Backticks (`).
+
+Lösung:
+Befehl entweder in einer Zeile ausführen oder Backticks verwenden.
+
+---
+
+## 4.2 Jenkins entsperren (Initial Password finden)
+
+Beim ersten Start verlangt Jenkins ein Initial Administrator Passwort.
+
+---
+
+![JenkinsLocked](images/jenksiensperren.png)
+
+---
+
+Pfad im Container:
+```
+/var/jenkins_home/secrets/initialAdminPassword
+```
+
+Passwort auslesen mit:
+
+```powershell
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+---
+
+![PwdJenkins](images/jenksipwd.png)
+
+Das ausgegebene Passwort wurde:
+- Kopiert
+- In das Webformular eingefügt
+- Jenkins erfolgreich initialisiert
+
+---
+
+## Fehler 4 – Containername prüfen
+
+Falls `No such container` erscheint:
+
+```powershell
+docker ps
+```
+
+Containername prüfen und im `docker exec` Befehl anpassen.
+
+---
+
+# 5. Sicherheitsaspekte
+
+In diesem Kapitel wurden folgende Sicherheitsmassnahmen demonstriert:
+
+- Logging und Debugging mit `docker logs`
+- Monitoring mit cAdvisor
+- Speicherbegrenzung gegen DoS
+- CPU-Beschränkung
+- Read-Only Filesystem
+- CI/CD Pipeline mit Jenkins
+- Containerzugriff kontrollieren
+
+---
+
+# 6. Fazit
+
+In dieser Aufgabe wurde gezeigt, wie Container-Systeme:
+
+- überwacht werden können
+- Ressourcen beschränkt werden
+- gegen DoS-Angriffe geschützt werden
+- sicher konfiguriert werden
+- automatisiert gebaut werden können
+
+Zusätzlich wurden reale Fehler analysiert und behoben, darunter:
+
+- Git Bash Pfadprobleme
+- Veraltete Docker Images
+- Falsche PowerShell Syntax
+- Jenkins Initialisierung
+
+Damit wurde ein praxisnaher Einblick in Container-Sicherheit und DevOps gewonnen.
